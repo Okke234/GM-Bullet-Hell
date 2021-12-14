@@ -13,12 +13,10 @@ public class Bullet : MonoBehaviour
     private int speed = -1;
     private int size = -1;
     private Vector2 direction;
-    private Transform origin;
+    private Vector2 origin;
     private Sprite sprite;
 
-    private Sprite default_sprite;
-
-    public Bullet(Sprite sprite, Transform origin, Vector2 direction, int size = 16, int speed = 5, int damage = 100, int lifetime = 5, bool specialPattern = false, bool inflictStatusEffect = false, bool boomerang = false, bool destroyOnHit = true)
+    /*public Bullet(Sprite sprite, Vector2 origin, Vector2 direction, int size = 16, int speed = 5, int damage = 100, int lifetime = 5, bool specialPattern = false, bool inflictStatusEffect = false, bool boomerang = false, bool destroyOnHit = true)
     {
         this.direction = direction;
         this.sprite = sprite;
@@ -31,15 +29,38 @@ public class Bullet : MonoBehaviour
         this.inflictStatusEffect = inflictStatusEffect;
         this.boomerang = boomerang;
         this.destroyOnHit = destroyOnHit;
+    }*/
+
+    public static Bullet Attach(GameObject go, Sprite sprite, Vector2 origin, Vector2 direction, int size = 16, int speed = 5, int damage = 100, int lifetime = 5, bool specialPattern = false, bool inflictStatusEffect = false, bool boomerang = false, bool destroyOnHit = true)
+    {
+        Bullet bullet = go.AddComponent<Bullet>();
+        bullet.gameObject.AddComponent<Rigidbody2D>();
+        bullet.gameObject.AddComponent<SpriteRenderer>().sprite = sprite;
+
+        return bullet;
     }
 
-    private void Awake()
+    public static Bullet Create(Sprite sprite, Vector2 origin, Vector2 direction, int size = 16, int speed = 5, int damage = 100, int lifetime = 5, bool specialPattern = false, bool inflictStatusEffect = false, bool boomerang = false, bool destroyOnHit = true)
+    {
+        return Attach(new GameObject("Bullet"), sprite, origin, direction, size, speed, damage, lifetime, specialPattern, inflictStatusEffect, boomerang, destroyOnHit);
+    }
+
+    /*private void Awake()
     {
         gameObject.AddComponent<Rigidbody2D>();
-    }
+        SpriteRenderer r = gameObject.AddComponent<SpriteRenderer>();
+        r.sprite = sprite;
+    }*/
 
     private void FixedUpdate()
     {
-        
+        Move();
+    }
+
+    private void Move()
+    {
+        // Don't do this...
+        var rb = gameObject.GetComponent<Rigidbody2D>();
+        rb.MovePosition(rb.position + direction);
     }
 }
