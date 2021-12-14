@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
         if (!isOnCooldown)
         {
             Vector2 direction = (Player.Instance.transform.position - gameObject.transform.position).normalized;
-            Bullet.Create(DataManager.Instance.bulletSprites[0], gameObject.transform.position, direction);
+            //Bullet.Create(DataManager.Instance.bulletSprites[0], gameObject.transform.position, direction);   // To be replaced.
             isOnCooldown = true;
             StartCoroutine(Cooldown());
         }

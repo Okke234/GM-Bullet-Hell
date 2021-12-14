@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private bool destroyOnHit = true;
-    private bool boomerang = false;
-    private bool inflictStatusEffect = false;
-    private bool specialPattern = false;
-    private int lifetime = -1;
-    private int damage = -1;
-    private int speed = -1;
-    private int size = -1;
-    private Vector2 direction;
-    private Vector2 origin;
-    private Sprite sprite;
+    public bool destroyOnHit = true;
+    public bool boomerang = false;
+    public bool inflictStatusEffect = false;
+    public bool specialPattern = false;
+    public int lifetime = -1;
+    public int damage = -1;
+    public int speed = -1;
+    public int size = -1;
+    public Vector2 direction;
+    public Vector2 origin;
+    public Sprite sprite;
 
     /*public Bullet(Sprite sprite, Vector2 origin, Vector2 direction, int size = 16, int speed = 5, int damage = 100, int lifetime = 5, bool specialPattern = false, bool inflictStatusEffect = false, bool boomerang = false, bool destroyOnHit = true)
     {
@@ -63,4 +63,6 @@ public class Bullet : MonoBehaviour
         var rb = gameObject.GetComponent<Rigidbody2D>();
         rb.MovePosition(rb.position + direction);
     }
+
+    // Add proper way to be spawned by Enemy using objectpool.
 }
