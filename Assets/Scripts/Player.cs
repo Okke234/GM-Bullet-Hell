@@ -6,9 +6,9 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Camera cam;
 
-    public int Speed { get; set; } = 5;
-    public int Health { get; set; } = 200;
-    public int Energy { get; set; } = 100;
+    public int speed = 5;
+    public int health = 200;
+    public int energy = 200;
     public Rigidbody2D rb { get; private set; }
 
     #region Singleton
@@ -36,5 +36,11 @@ public class Player : MonoBehaviour
     {
         Vector2 movement = new Vector2(x, y);
         rb.MovePosition(rb.position + movement);
+    }
+
+    public void TakeDamage(int dmg)
+    {
+        health -= dmg;
+        Debug.Log($"Damage taken: {dmg}, Health remaining: {health}");
     }
 }

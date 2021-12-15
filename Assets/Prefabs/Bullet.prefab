@@ -102,13 +102,34 @@ MonoBehaviour:
   boomerang: 0
   inflictStatusEffect: 0
   specialPattern: 0
-  lifetime: -1
-  damage: -1
+  lifetime: 10
+  damage: 100
   speed: 3
-  size: -1
+  size: 1
   direction: {x: 0, y: 0}
   origin: {x: 0, y: 0}
   sprite: {fileID: 21300000, guid: edfb2704815e3c2478f37e327906c951, type: 3}
+  OnBulletDespawn:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLifetimeEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerHit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 875603107781869120, guid: fc8aacaa93d30df4a9d6f28e3bae6026, type: 3}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: TakeDamage
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 100
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!50 &24728528179187508
 Rigidbody2D:
   serializedVersion: 4
@@ -123,7 +144,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -140,7 +161,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

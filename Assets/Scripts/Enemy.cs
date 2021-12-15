@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private float shotCooldown = 3f;
+    private float shotCooldown = 1f;
     private bool isOnCooldown = false;
 
     // List for types of bullets it can shoot
