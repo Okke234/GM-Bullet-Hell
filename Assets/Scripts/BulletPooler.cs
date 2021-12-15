@@ -15,6 +15,7 @@ public class BulletPooler : MonoBehaviour
 
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
+    public Dictionary<string, Sprite> tagToSpriteDictionary = new Dictionary<string, Sprite>();
 
     #region Singleton
 
@@ -52,17 +53,25 @@ public class BulletPooler : MonoBehaviour
 
             poolDictionary.Add(pool.tag, bulletPool);
         }
+
+
+        // Do this better later down the line.
+        tagToSpriteDictionary.Add("test", DataManager.Instance.bulletSprites[0]);
     }
 
-    public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation)
+    public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation, Vector2 direction)
     {
-        //Add a check here.
+        if (!poolDictionary.ContainsKey(tag))
+        {
+            return null;
+        }
 
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
 
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
+        objectToSpawn.GetComponent<Bullet>().direction = direction;
 
         poolDictionary[tag].Enqueue(objectToSpawn);
 

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
+    public List<Sprite> bulletSprites;
+
+    #region Singleton
     private static DataManager _instance;
     public static DataManager Instance { get { return _instance; } }
-
-    public List<Sprite> bulletSprites;
 
     private void Awake()
     {
@@ -20,4 +21,5 @@ public class DataManager : MonoBehaviour
             _instance = this;
         }
     }
+    #endregion
 }
