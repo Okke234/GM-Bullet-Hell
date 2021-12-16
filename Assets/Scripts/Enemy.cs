@@ -8,13 +8,15 @@ public class Enemy : MonoBehaviour
     private float shotCooldown = 1f;
     private bool isOnCooldown = false;
 
+    // Vars for wandering
+
     // List for types of bullets it can shoot
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -51,4 +53,6 @@ public class Enemy : MonoBehaviour
             StartCoroutine(Cooldown());
         }
     }
+
+    // Add wandering
 }
