@@ -1,0 +1,12 @@
+Unlockables through: Completed levels, experience, gold medals, collectables
+	- Skins
+	- Bonus levels
+	- Music tracks
+	
+Repeatable tutorial with prompt on first launch.
+
+Start/Finish zones -> enemies respect the zone you are in.
+
+Medals awarded for time thresholds -> used as currency and for achievements
+
+Online leaderboards to compete against other players.

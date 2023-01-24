@@ -20,6 +20,8 @@ public class Bullet : MonoBehaviour
     public Vector2 direction;
     public Vector2 origin;
     public Sprite sprite;
+
+    private bool _hasDealtDamage = false;
     //private Rigidbody2D rb;
 
     private void Start()
@@ -41,8 +43,13 @@ public class Bullet : MonoBehaviour
     {
         if (other.gameObject == Player.Instance.gameObject)
         {
+            if (_hasDealtDamage)
+            {
+                return;
+            }
             //Debug.Log("Player has been hit!");
             Player.Instance.TakeDamage(damage);
+            _hasDealtDamage = true;
             if (destroyOnHit)
             {
                 RemoveBullet();
@@ -52,6 +59,10 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if (collision.gameObject == Player.Instance.gameObject)
+        {
+            return;
+        }
         RemoveBullet();
     }
 
@@ -59,7 +70,7 @@ public class Bullet : MonoBehaviour
     {
         if (!specialPattern)
         {
-            transform.position = (Vector2)transform.position + (direction * speed * Time.fixedDeltaTime);
+            transform.position = (Vector2)transform.position + (direction * (speed * Time.fixedDeltaTime));
         } /* else {
            * MoveInPattern(patternId);
            * }*/
@@ -99,6 +110,7 @@ public class Bullet : MonoBehaviour
             yield return null;
         }
         FlipBullet();
+        _hasDealtDamage = false;
     }
 
     /*private void MoveInPattern(int id) {

@@ -10,12 +10,12 @@ public class GameManager : MonoBehaviour
     public string menuScene;
     public List<string> levels;
     // Figure out a way to get the levels as Scenes.
-    private Scene loadedLevel;
-    private AsyncOperation nextLevelLoad;
+    private Scene _loadedLevel;
+    private AsyncOperation _nextLevelLoad;
 
     #region Singleton
     private static GameManager _instance;
-    public static GameManager Instance { get { return _instance; } }
+    public static GameManager Instance => _instance;
 
     private void Awake()
     {
@@ -44,12 +44,12 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator StartLoadingNextLevel()
     {
-        if (SceneManager.GetActiveScene() != levels[levels.Count - 1])
+        if (SceneManager.GetActiveScene().name != levels[^1])
         {
-            nextLevelLoad = SceneManager.LoadSceneAsync(levels[GetCurrentLevelIndex() + 1].name, LoadSceneMode.Additive);
-            nextLevelLoad.allowSceneActivation = false;
+            _nextLevelLoad = SceneManager.LoadSceneAsync(levels[GetCurrentLevelIndex() + 1], LoadSceneMode.Additive);
+            _nextLevelLoad.allowSceneActivation = false;
         }
-        while (!nextLevelLoad.isDone)
+        while (!_nextLevelLoad.isDone)
         {
             yield return null;
         }
@@ -57,11 +57,9 @@ public class GameManager : MonoBehaviour
 
     public void SwitchToNextLevel()
     {
-        if (loadedLevel != null && loadedLevel == levels[GetCurrentLevelIndex() + 1])
-        {
-            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-            SceneManager.SetActiveScene(loadedLevel);
-        }
+        if (_loadedLevel.name != levels[GetCurrentLevelIndex() + 1]) return;
+        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+        SceneManager.SetActiveScene(_loadedLevel);
         // This probably needs an else
     }
 
@@ -72,20 +70,20 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene(menuScene.name, LoadSceneMode.Single);
+        SceneManager.LoadScene(menuScene, LoadSceneMode.Single);
     }
 
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        loadedLevel = scene;
+        _loadedLevel = scene;
     }
 
     private int GetCurrentLevelIndex()
     {
-        for (int i = 0; i < levels.Count; i++)
+        for (var i = 0; i < levels.Count; i++)
         {
-            if (levels[i] == SceneManager.GetActiveScene())
+            if (levels[i] == SceneManager.GetActiveScene().name)
             {
                 return i;
             }
