@@ -18,11 +18,13 @@ public class Enemy : MonoBehaviour
     {
 
     }
-
-    // Update is called once per frame
+    
     void FixedUpdate()
     {
-        ShootAtPlayer();
+        if (Player.Instance.hasLeftSpawn)
+        {
+            ShootAtPlayer();
+        }
     }
 
     private IEnumerator Cooldown()
