@@ -1765,19 +1765,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4466368999506991068, guid: 179f2b6bb85f38840b401061facff6c7, type: 3}
   m_PrefabInstance: {fileID: 4466368999153542692}
   m_PrefabAsset: {fileID: 0}
---- !u!1839735485 &758346234 stripped
-Tilemap:
-  m_CorrespondingSourceObject: {fileID: 4466368999506991070, guid: 179f2b6bb85f38840b401061facff6c7, type: 3}
-  m_PrefabInstance: {fileID: 4466368999153542692}
-  m_PrefabAsset: {fileID: 0}
 --- !u!19719996 &758346235 stripped
 TilemapCollider2D:
   m_CorrespondingSourceObject: {fileID: 4466368999506991071, guid: 179f2b6bb85f38840b401061facff6c7, type: 3}
-  m_PrefabInstance: {fileID: 4466368999153542692}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &758346236 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 4294759149824741926, guid: 179f2b6bb85f38840b401061facff6c7, type: 3}
   m_PrefabInstance: {fileID: 4466368999153542692}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1049838387
@@ -18038,22 +18028,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 875603107781869120, guid: fc8aacaa93d30df4a9d6f28e3bae6026, type: 3}
-      propertyPath: speed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 875603107781869120, guid: fc8aacaa93d30df4a9d6f28e3bae6026, type: 3}
-      propertyPath: health
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 875603107781869120, guid: fc8aacaa93d30df4a9d6f28e3bae6026, type: 3}
-      propertyPath: spawnArea
-      value: 
-      objectReference: {fileID: 758346234}
-    - target: {fileID: 875603107781869120, guid: fc8aacaa93d30df4a9d6f28e3bae6026, type: 3}
-      propertyPath: spawnBounds
-      value: 
-      objectReference: {fileID: 758346236}
     - target: {fileID: 875603107781869123, guid: fc8aacaa93d30df4a9d6f28e3bae6026, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -41,13 +41,13 @@ public class BulletPooler : MonoBehaviour
 
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        foreach (Pool pool in pools)
+        foreach (var pool in pools)
         {
-            Queue<GameObject> bulletPool = new Queue<GameObject>();
+            var bulletPool = new Queue<GameObject>();
 
-            for (int i = 0; i < pool.size; i++)
+            for (var i = 0; i < pool.size; i++)
             {
-                GameObject obj = Instantiate(pool.prefab);
+                var obj = Instantiate(pool.prefab);
                 obj.SetActive(false);
                 bulletPool.Enqueue(obj);
             }
@@ -60,21 +60,21 @@ public class BulletPooler : MonoBehaviour
         tagToSpriteDictionary.Add("test", DataManager.Instance.bulletSprites[0]);
     }
 
-    public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation, Vector2 direction)
+    public GameObject SpawnFromPool(string bulletTag, Vector2 position, Quaternion rotation, Vector2 direction)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(bulletTag))
         {
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+        var objectToSpawn = poolDictionary[bulletTag].Dequeue();
 
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
         objectToSpawn.GetComponent<Bullet>().direction = direction;
 
-        poolDictionary[tag].Enqueue(objectToSpawn);
+        poolDictionary[bulletTag].Enqueue(objectToSpawn);
 
         return objectToSpawn;
     }

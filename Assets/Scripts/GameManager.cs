@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ public class GameManager : MonoBehaviour
 {
     public string menuScene;
     public List<string> levels;
+    [NonSerialized]
+    public bool levelCompleted = false;
     // Figure out a way to get the levels as Scenes.
     private Scene _loadedLevel;
     private AsyncOperation _nextLevelLoad;

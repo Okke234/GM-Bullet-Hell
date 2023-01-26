@@ -6,14 +6,14 @@ using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
     [SerializeField] private Tilemap spawnArea;
     
+    public Camera cam;
     public int speed = 5;
     public int health = 200;
     public int energy = 200;
     public bool hasLeftSpawn = false;
-    public Rigidbody2D rb { get; private set; }
+    private Rigidbody2D Rb { get; set; }
     
 
     #region Singleton
@@ -34,20 +34,14 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-    }
-
-    private void FixedUpdate()
-    {
-        if (!hasLeftSpawn){
-            SpawnAreaCheck();
-        }
+        Rb = GetComponent<Rigidbody2D>();
+        StartCoroutine(SpawnAreaCheck());
     }
 
     public void Move(float x, float y)
     {
-        Vector2 movement = new Vector2(x, y);
-        rb.MovePosition(rb.position + movement);
+        var movement = new Vector2(x, y);
+        Rb.MovePosition(Rb.position + movement);
     }
 
     public void TakeDamage(int dmg)
@@ -56,11 +50,13 @@ public class Player : MonoBehaviour
         Debug.Log($"Damage taken: {dmg}, Health remaining: {health}");
     }
 
-    private void SpawnAreaCheck()
+    private IEnumerator SpawnAreaCheck()
     {
-        if (!spawnArea.HasTile(Vector3Int.FloorToInt(transform.position)))
+        var wait = new WaitForSeconds(0.2f);
+        while (spawnArea.HasTile(Vector3Int.FloorToInt(transform.position)))
         {
-            hasLeftSpawn = true;
+            yield return wait;
         }
+        hasLeftSpawn = true;
     }
 }

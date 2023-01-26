@@ -6,22 +6,21 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float shotCooldown = 1f;
-    private bool isOnCooldown = false;
+    private bool _isOnCooldown;
 
     // Vars for wandering
 
     // List for types of bullets it can shoot
 
-
-    // Start is called before the first frame update
-    void Start()
+    
+    private void Start()
     {
 
     }
     
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (Player.Instance.hasLeftSpawn)
+        if (!GameManager.Instance.levelCompleted && Player.Instance.hasLeftSpawn)
         {
             ShootAtPlayer();
         }
@@ -35,25 +34,23 @@ public class Enemy : MonoBehaviour
             normalizedTime += Time.deltaTime / shotCooldown;
             yield return null;
         }
-        isOnCooldown = false;
+        _isOnCooldown = false;
     }
 
     private void ShootAtPlayer()
     {
-        if (!isOnCooldown)
-        {
-            Vector2 direction = (Player.Instance.transform.position - gameObject.transform.position).normalized;
-            float rot_z = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion rotation = Quaternion.Euler(0f, 0f, rot_z);
-            isOnCooldown = true;
+        if (_isOnCooldown) return;
+        Vector2 direction = (Player.Instance.transform.position - gameObject.transform.position).normalized;
+        var rotZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        var rotation = Quaternion.Euler(0f, 0f, rotZ);
+        _isOnCooldown = true;
 
-            BulletPooler.Instance.SpawnFromPool("test", gameObject.transform.position, rotation, direction);
-
+        BulletPooler.Instance.SpawnFromPool("test", gameObject.transform.position, rotation, direction);
 
 
 
-            StartCoroutine(Cooldown());
-        }
+
+        StartCoroutine(Cooldown());
     }
 
     // Add wandering
