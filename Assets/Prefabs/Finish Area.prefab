@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4466368999506991071}
   - component: {fileID: 4294759149824741926}
   m_Layer: 0
-  m_Name: Starting Area
+  m_Name: Finish Area
   m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4466368999506991059}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -35,7 +35,7 @@ Transform:
   - {fileID: 4292107221869190327}
   m_Father: {fileID: 0}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!1839735485 &4466368999506991070
 Tilemap:
   m_ObjectHideFlags: 0
@@ -1114,9 +1114,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4292107221869190327}
   - component: {fileID: 7018965779121300924}
-  - component: {fileID: 1157606564029617765}
+  - component: {fileID: 4225488633265980136}
   m_Layer: 0
-  m_Name: StartLine
+  m_Name: FinishLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1178,7 +1178,7 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!114 &1157606564029617765
+--- !u!114 &4225488633265980136
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1187,6 +1187,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5617132711761762838}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcd41bbee55a5d7488d0e6b5b1da957c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ae12a0cd4a1c504181ee5919c70fe4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

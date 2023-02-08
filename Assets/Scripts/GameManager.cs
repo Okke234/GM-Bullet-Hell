@@ -2,12 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    private bool _timerStarted;
+    public float levelTimer;
+    [SerializeField] private TextMeshProUGUI timerText;
     public string menuScene;
     public List<string> levels;
     [NonSerialized]
@@ -37,6 +42,17 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    private void OnEnable()
+    {
+        StartLine.OnTrigger += StartLevel;
+        FinishLine.OnTrigger += FinishLevel;
+    }
+    
+    private void Update()
+    {
+        UpdateTimer();
+    }
+    
     public void LoadLevelFromMenu(string level)
     {
         if (SceneManager.GetActiveScene().name != level)
@@ -45,7 +61,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public IEnumerator StartLoadingNextLevel()
+    private IEnumerator StartLoadingNextLevel()
     {
         if (SceneManager.GetActiveScene().name != levels[^1])
         {
@@ -94,4 +110,30 @@ public class GameManager : MonoBehaviour
         return -1;
     }
 
+    public void OnPlayerDeath()
+    {
+        Player.Instance.gameObject.SetActive(false);
+    }
+
+    private void UpdateTimer()
+    {
+        if (!_timerStarted) return;
+        levelTimer += Time.deltaTime;
+        var time = TimeSpan.FromSeconds(levelTimer);
+        timerText.text = time.ToString(@"mm\:ss\:fff");
+    }
+
+    private void StartLevel()
+    {
+        levelTimer = 0.0f;
+        _timerStarted = true;
+    }
+
+    private void FinishLevel()
+    {
+        levelCompleted = true;
+        _timerStarted = false;
+        StartCoroutine(StartLoadingNextLevel());
+        Debug.Log("You have beaten the level!");
+    }
 }

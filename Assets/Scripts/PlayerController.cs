@@ -9,6 +9,13 @@ public class PlayerController : MonoBehaviour
     private float _fdt;
     private bool _cameraShifted = false;
 
+    public static float finalInputX, finalInputY;
+    
+    private void OnEnable()
+    {
+        FinishLine.OnTrigger += HandleLevelEnd;
+    }
+
     private void Start()
     {
         _p = Player.Instance;
@@ -36,6 +43,7 @@ public class PlayerController : MonoBehaviour
     
     private void ShiftCamera()
     {
+        _cameraShifted = !_cameraShifted;
         var camPos = _p.cam.transform.localPosition;
         if (_cameraShifted)
         {
@@ -47,5 +55,12 @@ public class PlayerController : MonoBehaviour
             camPos.y = 10.0f;
             _p.cam.transform.localPosition = camPos;
         }
+    }
+
+    private void HandleLevelEnd()
+    {
+        finalInputX = Input.GetAxisRaw("Horizontal") * _p.speed * _fdt;
+        finalInputY = Input.GetAxisRaw("Vertical") * _p.speed * _fdt;
+        enabled = false;
     }
 }

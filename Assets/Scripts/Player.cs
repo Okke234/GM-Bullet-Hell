@@ -2,17 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private Tilemap spawnArea;
-    
+
+    public UnityEvent onDeath;
     public Camera cam;
     public int speed = 5;
     public int health = 200;
     public int energy = 200;
     public bool hasLeftSpawn = false;
+
+    private bool _doesEndMovement = false;
     private Rigidbody2D Rb { get; set; }
     
 
@@ -32,10 +36,15 @@ public class Player : MonoBehaviour
     }
     #endregion
 
+    private void OnEnable()
+    {
+        StartLine.OnTrigger += HandleLevelStart;
+        FinishLine.OnTrigger += HandleLevelEnd;
+    }
+
     private void Start()
     {
         Rb = GetComponent<Rigidbody2D>();
-        StartCoroutine(SpawnAreaCheck());
     }
 
     public void Move(float x, float y)
@@ -48,15 +57,29 @@ public class Player : MonoBehaviour
     {
         health -= dmg;
         Debug.Log($"Damage taken: {dmg}, Health remaining: {health}");
+        if (health <= 0) onDeath?.Invoke();
+    }
+    
+    private void HandleLevelStart()
+    {
+        hasLeftSpawn = true;
+    }
+    
+    private void HandleLevelEnd()
+    {
+        StartCoroutine(LevelEndMovement());
     }
 
-    private IEnumerator SpawnAreaCheck()
+    private IEnumerator LevelEndMovement()
     {
-        var wait = new WaitForSeconds(0.2f);
-        while (spawnArea.HasTile(Vector3Int.FloorToInt(transform.position)))
-        {
-            yield return wait;
-        }
-        hasLeftSpawn = true;
+        _doesEndMovement = true;
+        yield return new WaitForSeconds(2);
+        _doesEndMovement = false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (!_doesEndMovement) return;
+        Move(PlayerController.finalInputX, PlayerController.finalInputY);
     }
 }
