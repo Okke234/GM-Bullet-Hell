@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
     private IEnumerator LevelEndMovement()
     {
         _doesEndMovement = true;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         _doesEndMovement = false;
     }
 

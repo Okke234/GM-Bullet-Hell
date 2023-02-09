@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
             _instance = this;
         }
 
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -70,14 +70,36 @@ public class GameManager : MonoBehaviour
         }
         while (!_nextLevelLoad.isDone)
         {
+            if (_nextLevelLoad.progress >= 0.9f)
+            {
+                /*
+                 ON BUTTON PRESS FOR NEXT LEVEL:
+                _loadedLevel.name = levels[GetCurrentLevelIndex() + 1];
+                SwitchToNextLevel();
+                */
+            }
+            else
+            {
+                /*
+                 * 
+                 * if (!_displayingLoadingScreen)
+                 * {
+                 *      Enable Loading screen
+                 *      Update progress bar
+                 *      _displayLoadingScreen = true
+                 * }
+                 */
+                //Display loading screen when user tries to go to next level.
+            }
             yield return null;
         }
     }
 
-    public void SwitchToNextLevel()
+    private void SwitchToNextLevel()
     {
-        if (_loadedLevel.name != levels[GetCurrentLevelIndex() + 1]) return;
+        //if (_loadedLevel.name != levels[GetCurrentLevelIndex() + 1]) return;
         SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+        _nextLevelLoad.allowSceneActivation = true;
         SceneManager.SetActiveScene(_loadedLevel);
         // This probably needs an else
     }
@@ -93,12 +115,13 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) //Probably not needed...
     {
         _loadedLevel = scene;
+        Debug.Log(_loadedLevel.name + " Loaded!");
     }
 
-    private int GetCurrentLevelIndex()
+    private int GetCurrentLevelIndex() //Works!
     {
         for (var i = 0; i < levels.Count; i++)
         {
@@ -133,7 +156,10 @@ public class GameManager : MonoBehaviour
     {
         levelCompleted = true;
         _timerStarted = false;
-        StartCoroutine(StartLoadingNextLevel());
+        if (GetCurrentLevelIndex() != levels.Count)
+        {
+            StartCoroutine(StartLoadingNextLevel());
+        }
         Debug.Log("You have beaten the level!");
     }
 }

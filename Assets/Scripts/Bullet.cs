@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,11 +23,20 @@ public class Bullet : MonoBehaviour
     public Sprite sprite;
 
     private bool _hasDealtDamage = false;
+    private bool _hasLevelStarted = false;
+    private SpriteRenderer _spriteRenderer;
     //private Rigidbody2D rb;
+
+    private void OnEnable()
+    {
+        StartLine.OnTrigger += HandleLevelStart;
+        FinishLine.OnTrigger += HandleLevelEnd;
+    }
 
     private void Start()
     {
         //rb = gameObject.GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         StartCoroutine(LifetimeCheck());
         if (boomerang)
         {
@@ -36,28 +46,29 @@ public class Bullet : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject == Player.Instance.gameObject)
+        if (_hasLevelStarted)
         {
-            if (_hasDealtDamage)
-            {
-                return;
-            }
-            //Debug.Log("Player has been hit!");
-            Player.Instance.TakeDamage(damage);
-            _hasDealtDamage = true;
-            if (destroyOnHit)
-            {
-                RemoveBullet();
-            }
+            Move();
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject != Player.Instance.gameObject) return;
+        if (_hasDealtDamage)
+        {
+            return;
+        }
+        //Debug.Log("Player has been hit!");
+        Player.Instance.TakeDamage(damage);
+        _hasDealtDamage = true;
+        if (destroyOnHit)
+        {
+            RemoveBullet();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject == Player.Instance.gameObject)
         {
@@ -70,7 +81,8 @@ public class Bullet : MonoBehaviour
     {
         if (!specialPattern)
         {
-            transform.position = (Vector2)transform.position + (direction * (speed * Time.fixedDeltaTime));
+            var t = transform;
+            t.position = (Vector2)t.position + (direction * (speed * Time.fixedDeltaTime));
         } /* else {
            * MoveInPattern(patternId);
            * }*/
@@ -125,4 +137,27 @@ public class Bullet : MonoBehaviour
      * }
      */
 
+    private void HandleLevelStart()
+    {
+        _hasLevelStarted = true;
+    }
+
+    private void HandleLevelEnd()
+    {
+        _hasLevelStarted = false;
+        if (gameObject.activeSelf)
+        {
+            StartCoroutine(FadeOut());
+        }
+    }
+
+    private IEnumerator FadeOut()
+    {
+        var alpha = _spriteRenderer.color.a;
+        for (var t = 0.0f; t < 1.0f; t += Time.deltaTime / 3.0f)
+        {
+            _spriteRenderer.color = new Color(1, 1, 1, Mathf.Lerp(alpha, 0.0f, t));
+            yield return null;
+        }
+    }
 }
