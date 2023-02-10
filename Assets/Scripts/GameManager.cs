@@ -12,14 +12,19 @@ public class GameManager : MonoBehaviour
 {
     private bool _timerStarted;
     public float levelTimer;
-    [SerializeField] private TextMeshProUGUI timerText;
-    public string menuScene;
-    public List<string> levels;
+    [SerializeField] private string menuScene;
+    [SerializeField] private List<string> levels;
     [NonSerialized]
     public bool levelCompleted = false;
     // Figure out a way to get the levels as Scenes.
     private Scene _loadedLevel;
     private AsyncOperation _nextLevelLoad;
+
+    private Canvas _loadingScreen;
+    private TextMeshProUGUI _loadingProgress;
+    private bool _displayingLoadingScreen;
+    
+    private TextMeshProUGUI timerText;
 
     #region Singleton
     private static GameManager _instance;
@@ -63,44 +68,51 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartLoadingNextLevel()
     {
+        var displayingContinueText = false;
         if (SceneManager.GetActiveScene().name != levels[^1])
         {
-            _nextLevelLoad = SceneManager.LoadSceneAsync(levels[GetCurrentLevelIndex() + 1], LoadSceneMode.Additive);
+            _nextLevelLoad = SceneManager.LoadSceneAsync(levels[GetCurrentLevelIndex() + 1], LoadSceneMode.Single);
             _nextLevelLoad.allowSceneActivation = false;
         }
         while (!_nextLevelLoad.isDone)
         {
             if (_nextLevelLoad.progress >= 0.9f)
             {
-                /*
-                 ON BUTTON PRESS FOR NEXT LEVEL:
-                _loadedLevel.name = levels[GetCurrentLevelIndex() + 1];
-                SwitchToNextLevel();
-                */
+                if (_displayingLoadingScreen && !displayingContinueText)
+                {
+                    _loadingProgress.text = "Press Space to continue...";
+                    displayingContinueText = true;
+                }
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    var nextLevelName = levels[GetCurrentLevelIndex() + 1];
+                    SwitchToNextLevel(nextLevelName);
+                    _displayingLoadingScreen = false;
+                    Destroy(_loadingScreen);
+                    //yield return null;
+                }
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.Space))
             {
-                /*
-                 * 
-                 * if (!_displayingLoadingScreen)
-                 * {
-                 *      Enable Loading screen
-                 *      Update progress bar
-                 *      _displayLoadingScreen = true
-                 * }
-                 */
-                //Display loading screen when user tries to go to next level.
+                //ONLY WHEN THE PLAYER HAS CHOSEN TO SWITCH LEVEL BEFORE IT HAS FINISHED LOADING!!   
+                 if (!_displayingLoadingScreen)
+                 {
+                     DisplayLoadingScreen();
+                     _displayingLoadingScreen = true;
+                 }
+
+                 _loadingProgress.text = "Loading progress: " + (_nextLevelLoad.progress * 100) + "%";
             }
             yield return null;
         }
     }
 
-    private void SwitchToNextLevel()
+    private void SwitchToNextLevel(string nextLevel)
     {
         //if (_loadedLevel.name != levels[GetCurrentLevelIndex() + 1]) return;
-        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
         _nextLevelLoad.allowSceneActivation = true;
-        SceneManager.SetActiveScene(_loadedLevel);
+        //SceneManager.SetActiveScene(SceneManager.GetSceneByName(nextLevel));
+        //SceneManager.UnloadSceneAsync(_loadedLevel);
         // This probably needs an else
     }
 
@@ -115,13 +127,15 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) //Probably not needed...
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        levelCompleted = false;
         _loadedLevel = scene;
+        MissingObjectsCheck();
         Debug.Log(_loadedLevel.name + " Loaded!");
     }
 
-    private int GetCurrentLevelIndex() //Works!
+    private int GetCurrentLevelIndex()
     {
         for (var i = 0; i < levels.Count; i++)
         {
@@ -131,6 +145,14 @@ public class GameManager : MonoBehaviour
             }
         }
         return -1;
+    }
+
+    private void DisplayLoadingScreen()
+    {
+        _loadingScreen = DataManager.Instance.loadingScreen;
+        _loadingProgress = _loadingScreen.GetComponentInChildren<TextMeshProUGUI>();
+        _loadingScreen = Instantiate(_loadingScreen);
+        Debug.Log("Displaying loading screen!");
     }
 
     public void OnPlayerDeath()
@@ -161,5 +183,19 @@ public class GameManager : MonoBehaviour
             StartCoroutine(StartLoadingNextLevel());
         }
         Debug.Log("You have beaten the level!");
+    }
+
+    private void MissingObjectsCheck()
+    {
+        if (InGameOverlay.Instance == null)
+        {
+            Instantiate(DataManager.Instance.inGameOverlay);
+            timerText = InGameOverlay.Instance.timerText;
+        }
+        
+        if (BulletPooler.Instance == null)
+        {
+            Instantiate(DataManager.Instance.poolerPrefab);
+        }
     }
 }

@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     
     private void OnEnable()
     {
+        StartLine.OnTrigger += HandleLevelStart;
         FinishLine.OnTrigger += HandleLevelEnd;
     }
 
@@ -55,6 +56,11 @@ public class PlayerController : MonoBehaviour
             camPos.y = 10.0f;
             _p.cam.transform.localPosition = camPos;
         }
+    }
+
+    private void HandleLevelStart()
+    {
+        
     }
 
     private void HandleLevelEnd()

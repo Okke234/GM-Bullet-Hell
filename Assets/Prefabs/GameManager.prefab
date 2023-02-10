@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3130525528299912287
 MonoBehaviour:
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelTimer: 0
-  timerText: {fileID: 0}
+  timerText: {fileID: 6112866324369828384, guid: b6aa42b9993df794daa35d7658ebab05, type: 3}
   menuScene: MainMenu
   levels:
   - Level1

@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
+    public Player playerPrefab;
+    public BulletPooler poolerPrefab;
+    public Canvas inGameOverlay;
     public List<Sprite> bulletSprites;
+    public Canvas loadingScreen;
 
     #region Singleton
     private static DataManager _instance;
@@ -20,6 +24,8 @@ public class DataManager : MonoBehaviour
         {
             _instance = this;
         }
+        
+        DontDestroyOnLoad(gameObject);
     }
     #endregion
 }

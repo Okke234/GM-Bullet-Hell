@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4466368999506991069}
   - component: {fileID: 4466368999506991071}
   - component: {fileID: 4294759149824741926}
+  - component: {fileID: 3251978578119798878}
   m_Layer: 0
   m_Name: Starting Area
   m_TagString: Respawn
@@ -954,7 +955,7 @@ Tilemap:
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -11, y: -18, z: 0}
-  m_Size: {x: 12, y: 18, z: 1}
+  m_Size: {x: 12, y: 7, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1104,6 +1105,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 12, y: 7}
   m_EdgeRadius: 0
+--- !u!114 &3251978578119798878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466368999506991059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3a4a6da8b9c6d24ebf2261f01474fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5617132711761762838
 GameObject:
   m_ObjectHideFlags: 0

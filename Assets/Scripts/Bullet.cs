@@ -145,7 +145,7 @@ public class Bullet : MonoBehaviour
     private void HandleLevelEnd()
     {
         _hasLevelStarted = false;
-        if (gameObject.activeSelf)
+        if (gameObject.activeSelf && _spriteRenderer != null)
         {
             StartCoroutine(FadeOut());
         }
