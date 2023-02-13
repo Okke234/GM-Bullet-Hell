@@ -129,6 +129,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (SceneManager.GetActiveScene().name == menuScene) return;
         levelCompleted = false;
         _loadedLevel = scene;
         MissingObjectsCheck();
@@ -178,7 +179,7 @@ public class GameManager : MonoBehaviour
     {
         levelCompleted = true;
         _timerStarted = false;
-        if (GetCurrentLevelIndex() != levels.Count)
+        if (GetCurrentLevelIndex() != levels.Count-1)
         {
             StartCoroutine(StartLoadingNextLevel());
         }
