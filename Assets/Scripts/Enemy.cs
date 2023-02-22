@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float shotCooldown = 1f;
     private bool _isOnCooldown;
+    private const string BulletType = "test";
+    private BulletPooler _pooler;
 
     // Vars for wandering
 
@@ -15,11 +17,12 @@ public class Enemy : MonoBehaviour
     
     private void Start()
     {
-
+        _pooler = FindObjectOfType<BulletPooler>();
     }
     
     private void FixedUpdate()
     {
+        if (GameManager.Instance.playerDied) return;
         if (!GameManager.Instance.levelCompleted && Player.Instance.hasLeftSpawn)
         {
             ShootAtPlayer();
@@ -45,7 +48,7 @@ public class Enemy : MonoBehaviour
         var rotation = Quaternion.Euler(0f, 0f, rotZ);
         _isOnCooldown = true;
 
-        BulletPooler.Instance.SpawnFromPool("test", gameObject.transform.position, rotation, direction);
+        _pooler.SpawnFromPool(BulletType, gameObject.transform.position, rotation, direction);
 
 
 

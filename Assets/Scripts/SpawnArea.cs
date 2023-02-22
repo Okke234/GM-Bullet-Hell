@@ -6,12 +6,21 @@ using UnityEngine.Tilemaps;
 
 public class SpawnArea : MonoBehaviour
 {
-    private void Start()
+    private static Bounds _bounds;
+    
+    public void Start()
     {
-        var bounds = GetComponent<Tilemap>().localBounds;
-        if (Player.Instance == null)
+        _bounds = GetComponent<Tilemap>().localBounds;
+        Player.Instance.transform.position = _bounds.center;
+        if (!Player.Instance.gameObject.activeSelf)
         {
-            Instantiate(DataManager.Instance.playerPrefab, bounds.center, new Quaternion(0, 0,  0, 0));
+            Player.Instance.gameObject.SetActive(true);
         }
+    }
+
+    public static void RespawnPlayer()
+    {
+        Player.Instance.transform.position = _bounds.center;
+        Player.Instance.gameObject.SetActive(true);
     }
 }

@@ -15,30 +15,9 @@ public class BulletPooler : MonoBehaviour
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
     public Dictionary<string, Sprite> tagToSpriteDictionary = new Dictionary<string, Sprite>();
-
-    #region Singleton
-
-    private static BulletPooler _instance;
-    public static BulletPooler Instance { get { return _instance; } }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
-    }
-
-    #endregion
-
+    
     private void Start()
     {
-
-
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
         foreach (var pool in pools)

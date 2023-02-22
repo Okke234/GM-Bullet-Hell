@@ -9,12 +9,18 @@ public class PlayerController : MonoBehaviour
     private float _fdt;
     private bool _cameraShifted = false;
 
-    public static float finalInputX, finalInputY;
+    public float finalInputX, finalInputY;
     
     private void OnEnable()
     {
         StartLine.OnTrigger += HandleLevelStart;
         FinishLine.OnTrigger += HandleLevelEnd;
+    }
+    
+    private void OnDisable()
+    {
+        StartLine.OnTrigger -= HandleLevelStart;
+        FinishLine.OnTrigger -= HandleLevelEnd;
     }
 
     private void Start()
@@ -26,6 +32,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (GameManager.Instance.levelCompleted) return;
         _horInput = Input.GetAxisRaw("Horizontal") * _p.speed;
         _verInput = Input.GetAxisRaw("Vertical") * _p.speed;
         if (Input.GetKeyDown(KeyCode.X))
@@ -60,13 +67,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLevelStart()
     {
-        
     }
 
     private void HandleLevelEnd()
     {
         finalInputX = Input.GetAxisRaw("Horizontal") * _p.speed * _fdt;
         finalInputY = Input.GetAxisRaw("Vertical") * _p.speed * _fdt;
-        enabled = false;
     }
 }

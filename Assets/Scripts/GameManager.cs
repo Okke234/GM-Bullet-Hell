@@ -5,26 +5,27 @@ using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    private bool _timerStarted;
-    public float levelTimer;
-    [SerializeField] private string menuScene;
+    [SerializeField] public string menuScene;
     [SerializeField] private List<string> levels;
-    [NonSerialized]
-    public bool levelCompleted = false;
-    // Figure out a way to get the levels as Scenes.
+    [NonSerialized] public bool levelCompleted = false;
+    [NonSerialized] public bool playerDied = false;
+    
+    private float _levelTimer;
+    private bool _timerStarted;
+    private TextMeshProUGUI _timerText;
+    
     private Scene _loadedLevel;
     private AsyncOperation _nextLevelLoad;
 
     private Canvas _loadingScreen;
     private TextMeshProUGUI _loadingProgress;
     private bool _displayingLoadingScreen;
-    
-    private TextMeshProUGUI timerText;
 
     #region Singleton
     private static GameManager _instance;
@@ -42,7 +43,6 @@ public class GameManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     #endregion
@@ -51,8 +51,27 @@ public class GameManager : MonoBehaviour
     {
         StartLine.OnTrigger += StartLevel;
         FinishLine.OnTrigger += FinishLevel;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        Player.OnDeath += OnPlayerDeath;
     }
     
+    private void OnDestroy()
+    {
+        StartLine.OnTrigger -= StartLevel;
+        FinishLine.OnTrigger -= FinishLevel;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        Player.OnDeath -= OnPlayerDeath;
+    }
+
+    private void Start()
+    {
+        if (FindObjectOfType<EventSystem>() == null)
+        {
+            var eventSystem = Instantiate(DataManager.Instance.eventSystem);
+            DontDestroyOnLoad(eventSystem);
+        }
+    }
+
     private void Update()
     {
         UpdateTimer();
@@ -119,10 +138,12 @@ public class GameManager : MonoBehaviour
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SpawnArea.RespawnPlayer();
     }
 
     public void ReturnToMenu()
     {
+        Player.Instance.ReattachCamera();
         SceneManager.LoadScene(menuScene, LoadSceneMode.Single);
     }
 
@@ -130,10 +151,12 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SceneManager.GetActiveScene().name == menuScene) return;
+        Player.Instance.HandleRestart();
+        playerDied = false;
         levelCompleted = false;
         _loadedLevel = scene;
         MissingObjectsCheck();
-        Debug.Log(_loadedLevel.name + " Loaded!");
+        //Debug.Log(_loadedLevel.name + " Loaded!");
     }
 
     private int GetCurrentLevelIndex()
@@ -158,32 +181,49 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        Player.Instance.gameObject.SetActive(false);
+        //Player.Instance.gameObject.SetActive(false);
+        //Time.timeScale = 0;
+        playerDied = true;
+        _timerStarted = false;
+        var los = Instantiate(DataManager.Instance.levelOverScreen);
+        los.deathScreen.SetActive(true);
+        var time = TimeSpan.FromSeconds(_levelTimer);
+        los.endTimer.text = "You died in: " + time.ToString(@"mm\:ss\:fff");
     }
 
     private void UpdateTimer()
     {
         if (!_timerStarted) return;
-        levelTimer += Time.deltaTime;
-        var time = TimeSpan.FromSeconds(levelTimer);
-        timerText.text = time.ToString(@"mm\:ss\:fff");
+        _levelTimer += Time.deltaTime;
+        var time = TimeSpan.FromSeconds(_levelTimer);
+        _timerText.text = time.ToString(@"mm\:ss\:fff");
     }
 
     private void StartLevel()
     {
-        levelTimer = 0.0f;
+        _levelTimer = 0.0f;
         _timerStarted = true;
     }
 
     private void FinishLevel()
     {
+        var los = Instantiate(DataManager.Instance.levelOverScreen);
+        if (SceneManager.GetActiveScene().name != levels[^1])
+        {
+            los.completedScreen.SetActive(true);
+        }
+        else
+        {
+            los.finalScreen.SetActive(true);
+        }
+        var time = TimeSpan.FromSeconds(_levelTimer);
+        los.endTimer.text = "You finished in: " + time.ToString(@"mm\:ss\:fff");
         levelCompleted = true;
         _timerStarted = false;
         if (GetCurrentLevelIndex() != levels.Count-1)
         {
             StartCoroutine(StartLoadingNextLevel());
         }
-        Debug.Log("You have beaten the level!");
     }
 
     private void MissingObjectsCheck()
@@ -191,12 +231,7 @@ public class GameManager : MonoBehaviour
         if (InGameOverlay.Instance == null)
         {
             Instantiate(DataManager.Instance.inGameOverlay);
-            timerText = InGameOverlay.Instance.timerText;
-        }
-        
-        if (BulletPooler.Instance == null)
-        {
-            Instantiate(DataManager.Instance.poolerPrefab);
+            _timerText = InGameOverlay.Instance.timerText;
         }
     }
 }

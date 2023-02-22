@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelTimer: 0
-  timerText: {fileID: 6112866324369828384, guid: b6aa42b9993df794daa35d7658ebab05, type: 3}
   menuScene: MainMenu
   levels:
   - Level1
   - Level2
+  playerDied: 0

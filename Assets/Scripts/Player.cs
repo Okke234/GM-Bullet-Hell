@@ -3,21 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Tilemap spawnArea;
+    private const int StartingHealth = 200;
+    private const int StartingEnergy = 200;
+    private const int StartingSpeed = 10;
 
-    public UnityEvent onDeath;
+    [NonSerialized] public int health;
+    [NonSerialized] public int energy;
+    [NonSerialized] public int speed;
+    [NonSerialized] public bool hasLeftSpawn;
+    public static event Action OnDeath;
     public Camera cam;
-    public int speed = 5;
-    public int health = 200;
-    public int energy = 200;
-    public bool hasLeftSpawn = false;
-
     private bool _doesEndMovement = false;
-    private Rigidbody2D Rb { get; set; }
+    private Rigidbody2D _rb;
+    private PlayerController _controller;
     
 
     #region Singleton
@@ -33,53 +36,92 @@ public class Player : MonoBehaviour
         {
             _instance = this;
         }
+        
+        DontDestroyOnLoad(gameObject);
     }
     #endregion
 
+    private void Initialize()
+    {
+        health = StartingHealth;
+        energy = StartingEnergy;
+        speed = StartingSpeed;
+        hasLeftSpawn = false;
+        _rb = GetComponent<Rigidbody2D>();
+        _controller = GetComponent<PlayerController>();
+        ReattachCamera();
+    }
     private void OnEnable()
     {
         StartLine.OnTrigger += HandleLevelStart;
         FinishLine.OnTrigger += HandleLevelEnd;
+        Initialize();
+    }
+
+    private void OnDestroy()
+    {
+        StartLine.OnTrigger -= HandleLevelStart;
+        FinishLine.OnTrigger -= HandleLevelEnd;
     }
 
     private void Start()
     {
-        Rb = GetComponent<Rigidbody2D>();
+        if (SceneManager.GetActiveScene().name == GameManager.Instance.menuScene)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void Move(float x, float y)
     {
         var movement = new Vector2(x, y);
-        Rb.MovePosition(Rb.position + movement);
+        _rb.MovePosition(_rb.position + movement);
     }
 
     public void TakeDamage(int dmg)
     {
         health -= dmg;
-        Debug.Log($"Damage taken: {dmg}, Health remaining: {health}");
-        if (health <= 0) onDeath?.Invoke();
+        if (health <= 0)
+        {
+            OnDeath?.Invoke();
+            cam.transform.parent = null;
+            gameObject.SetActive(false);
+        }
     }
     
     private void HandleLevelStart()
     {
         hasLeftSpawn = true;
     }
-    
+
+    public void HandleRestart() //Turn this into an event later
+    {
+        //Health = StartingHealth;
+        hasLeftSpawn = false;
+    }
     private void HandleLevelEnd()
     {
         StartCoroutine(LevelEndMovement());
+        hasLeftSpawn = false;
     }
 
     private IEnumerator LevelEndMovement()
     {
         _doesEndMovement = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.1f);
         _doesEndMovement = false;
     }
 
     private void FixedUpdate()
     {
         if (!_doesEndMovement) return;
-        Move(PlayerController.finalInputX, PlayerController.finalInputY);
+        Move(_controller.finalInputX, _controller.finalInputY);
+    }
+
+    public void ReattachCamera()
+    {
+        var t = cam.transform;
+        t.parent = transform;
+        t.localPosition = new Vector3(0, 2, -10);
     }
 }

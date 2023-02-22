@@ -31,8 +31,9 @@ public class Bullet : MonoBehaviour
     {
         StartLine.OnTrigger += HandleLevelStart;
         FinishLine.OnTrigger += HandleLevelEnd;
+        Player.OnDeath += OnPlayerDeath;
     }
-
+    
     private void Start()
     {
         //rb = gameObject.GetComponent<Rigidbody2D>();
@@ -54,6 +55,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (GameManager.Instance.playerDied || GameManager.Instance.levelCompleted) return;
         if (other.gameObject != Player.Instance.gameObject) return;
         if (_hasDealtDamage)
         {
@@ -70,10 +72,14 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject == Player.Instance.gameObject)
+        if (!GameManager.Instance.playerDied && !GameManager.Instance.levelCompleted)
         {
-            return;
+            if (collision.gameObject == Player.Instance.gameObject)
+            {
+                return;
+            }
         }
+
         RemoveBullet();
     }
 
@@ -96,7 +102,7 @@ public class Bullet : MonoBehaviour
     private void FlipBullet()
     {
         direction *= -1;
-        Vector3 euler = gameObject.transform.rotation.eulerAngles;
+        var euler = gameObject.transform.rotation.eulerAngles;
         gameObject.transform.Rotate(new Vector3(euler.x, euler.y, 180f));
     }
 
@@ -144,7 +150,17 @@ public class Bullet : MonoBehaviour
 
     private void HandleLevelEnd()
     {
+        Unsubscribe();
         _hasLevelStarted = false;
+        if (gameObject.activeSelf && _spriteRenderer != null)
+        {
+            StartCoroutine(FadeOut());
+        }
+    }
+
+    private void OnPlayerDeath()
+    {
+        Unsubscribe();
         if (gameObject.activeSelf && _spriteRenderer != null)
         {
             StartCoroutine(FadeOut());
@@ -159,5 +175,12 @@ public class Bullet : MonoBehaviour
             _spriteRenderer.color = new Color(1, 1, 1, Mathf.Lerp(alpha, 0.0f, t));
             yield return null;
         }
+    }
+
+    private void Unsubscribe()
+    {
+        StartLine.OnTrigger -= HandleLevelStart;
+        FinishLine.OnTrigger -= HandleLevelEnd;
+        Player.OnDeath -= OnPlayerDeath;
     }
 }

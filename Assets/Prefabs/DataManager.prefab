@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5920795895405167191
 MonoBehaviour:
@@ -44,9 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f664a70be8c597646b3b3f0399d80eb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 875603107781869120, guid: fc8aacaa93d30df4a9d6f28e3bae6026, type: 3}
   poolerPrefab: {fileID: 4165380496216315309, guid: 300f42a22b7c81c489186c8af8d37a42, type: 3}
   inGameOverlay: {fileID: 4701119468136329983, guid: 2eef8e49dd98c68499079d2d134934ce, type: 3}
   bulletSprites:
   - {fileID: 21300000, guid: edfb2704815e3c2478f37e327906c951, type: 3}
   loadingScreen: {fileID: 3297957941667848191, guid: ec7c323b075246749a6c4f09613315d0, type: 3}
+  levelOverScreen: {fileID: 6088914880513870698, guid: 7311a298c6c08df408426dd341edbec5, type: 3}
+  eventSystem: {fileID: 8691001906623103292, guid: 19e7cae499f9ecf4aa0a9a9eef6b9769, type: 3}
