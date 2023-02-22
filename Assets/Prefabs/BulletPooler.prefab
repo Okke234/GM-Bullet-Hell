@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4165380496216315309
 MonoBehaviour:
@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - tag: test
+  - tag: bullet
     prefab: {fileID: 1333981956551059062, guid: 8fce7ba25c47fa1499c005ea3cc71c5e, type: 3}
+    size: 200
+  - tag: bullet2
+    prefab: {fileID: 4969421753361680813, guid: a0b60bb21ee39e64ea8a85e1060f2398, type: 3}
     size: 200

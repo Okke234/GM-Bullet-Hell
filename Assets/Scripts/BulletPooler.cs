@@ -14,8 +14,7 @@ public class BulletPooler : MonoBehaviour
 
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
-    public Dictionary<string, Sprite> tagToSpriteDictionary = new Dictionary<string, Sprite>();
-    
+
     private void Start()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
@@ -33,10 +32,6 @@ public class BulletPooler : MonoBehaviour
 
             poolDictionary.Add(pool.tag, bulletPool);
         }
-
-
-        // Do this better later down the line.
-        tagToSpriteDictionary.Add("test", DataManager.Instance.bulletSprites[0]);
     }
 
     public GameObject SpawnFromPool(string bulletTag, Vector2 position, Quaternion rotation, Vector2 direction)

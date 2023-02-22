@@ -7,7 +7,6 @@ public class DataManager : MonoBehaviour
 {
     public BulletPooler poolerPrefab;
     public Canvas inGameOverlay;
-    public List<Sprite> bulletSprites;
     public Canvas loadingScreen;
     public LevelOverScreen levelOverScreen;
     public EventSystem eventSystem;

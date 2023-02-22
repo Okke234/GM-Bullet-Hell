@@ -173,27 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d999885a02add84db516e63abb0919e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnArea: {fileID: 4466368999506991070, guid: 179f2b6bb85f38840b401061facff6c7, type: 3}
-  onDeath:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3130525528299912287, guid: 1cb14fc196f282c4bba734f58556610e, type: 3}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnPlayerDeath
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   cam: {fileID: 875603108899086843}
-  speed: 10
-  health: 200
-  energy: 200
-  hasLeftSpawn: 0
 --- !u!114 &875603107781869132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547e8aa8603a88b46ace7d2f019dafd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  finalInputX: 0
+  finalInputY: 0
 --- !u!1 &875603108899086840
 GameObject:
   m_ObjectHideFlags: 0

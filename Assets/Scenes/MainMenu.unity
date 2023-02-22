@@ -534,34 +534,6 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1330709063}
-    - target: {fileID: 4981408079542702944, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
-      propertyPath: m_UiScaleMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4981408079542702944, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
-      propertyPath: m_MatchWidthOrHeight
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4981408079542702944, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
-      propertyPath: m_ReferenceResolution.x
-      value: 1280
-      objectReference: {fileID: 0}
-    - target: {fileID: 4981408079542702944, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
-      propertyPath: m_ReferenceResolution.y
-      value: 720
-      objectReference: {fileID: 0}
-    - target: {fileID: 5611825714680239267, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
-      propertyPath: m_text
-      value: Konartel
-      objectReference: {fileID: 0}
-    - target: {fileID: 5611825714680239267, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
-      propertyPath: m_fontSize
-      value: 84
-      objectReference: {fileID: 0}
-    - target: {fileID: 5611825714680239267, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 84
-      objectReference: {fileID: 0}
     - target: {fileID: 5687367723067197887, guid: c51f2dc1ad3e1df44a67a432af09bc63, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

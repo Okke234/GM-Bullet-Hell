@@ -16,8 +16,9 @@ public class Bullet : MonoBehaviour
     [Range(1, 300)]
     public int damage = -1;
     [Range(0, 10)]
-    public int speed = -1;
-    public int size = -1;
+    public int speed = 1;
+    [Range(1, 10)]
+    public int size = 1;
     public Vector2 direction;
     public Vector2 origin;
     public Sprite sprite;
@@ -169,10 +170,10 @@ public class Bullet : MonoBehaviour
 
     private IEnumerator FadeOut()
     {
-        var alpha = _spriteRenderer.color.a;
+        var alpha = _spriteRenderer.material.color.a;
         for (var t = 0.0f; t < 1.0f; t += Time.deltaTime / 3.0f)
         {
-            _spriteRenderer.color = new Color(1, 1, 1, Mathf.Lerp(alpha, 0.0f, t));
+            _spriteRenderer.material.color = new Color(1, 1, 1, Mathf.Lerp(alpha, 0.0f, t));
             yield return null;
         }
     }
