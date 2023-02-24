@@ -44,9 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f11b10425b592d148b93e53381e13719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelTimer: 0
   menuScene: MainMenu
   levels:
   - Level1
   - Level2
-  playerDied: 0
+  - Level3

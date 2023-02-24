@@ -16,12 +16,15 @@ public class GameManager : MonoBehaviour
     [NonSerialized] public bool levelCompleted = false;
     [NonSerialized] public bool playerDied = false;
     
+    public static event Action OnLevelLoaded;
+
     private float _levelTimer;
     private bool _timerStarted;
     private TextMeshProUGUI _timerText;
     
     private Scene _loadedLevel;
     private AsyncOperation _nextLevelLoad;
+    private static bool _requestedNextLevel;
 
     private Canvas _loadingScreen;
     private TextMeshProUGUI _loadingProgress;
@@ -99,10 +102,10 @@ public class GameManager : MonoBehaviour
             {
                 if (_displayingLoadingScreen && !displayingContinueText)
                 {
-                    _loadingProgress.text = "Press Space to continue...";
+                    //_loadingProgress.text = "Press Space to continue...";
                     displayingContinueText = true;
                 }
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (_requestedNextLevel)
                 {
                     var nextLevelName = levels[GetCurrentLevelIndex() + 1];
                     SwitchToNextLevel(nextLevelName);
@@ -111,7 +114,7 @@ public class GameManager : MonoBehaviour
                     //yield return null;
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.Space))
+            else if (_requestedNextLevel)
             {
                 //ONLY WHEN THE PLAYER HAS CHOSEN TO SWITCH LEVEL BEFORE IT HAS FINISHED LOADING!!   
                  if (!_displayingLoadingScreen)
@@ -124,6 +127,11 @@ public class GameManager : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    public void RequestNextLevel()
+    {
+        _requestedNextLevel = true;
     }
 
     private void SwitchToNextLevel(string nextLevel)
@@ -144,6 +152,10 @@ public class GameManager : MonoBehaviour
     public void ReturnToMenu()
     {
         Player.Instance.ReattachCamera();
+        if (Player.Instance.gameObject.activeSelf)
+        {
+            Player.Instance.gameObject.SetActive(false);
+        }
         SceneManager.LoadScene(menuScene, LoadSceneMode.Single);
     }
 
@@ -151,12 +163,12 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SceneManager.GetActiveScene().name == menuScene) return;
-        Player.Instance.HandleRestart();
+        OnLevelLoaded?.Invoke();
         playerDied = false;
         levelCompleted = false;
+        _requestedNextLevel = false;
         _loadedLevel = scene;
         MissingObjectsCheck();
-        //Debug.Log(_loadedLevel.name + " Loaded!");
     }
 
     private int GetCurrentLevelIndex()
@@ -188,7 +200,7 @@ public class GameManager : MonoBehaviour
         var los = Instantiate(DataManager.Instance.levelOverScreen);
         los.deathScreen.SetActive(true);
         var time = TimeSpan.FromSeconds(_levelTimer);
-        los.endTimer.text = "You died in: " + time.ToString(@"mm\:ss\:fff");
+        los.endTimer.text = "You died in: \n" + time.ToString(@"mm\:ss\:fff");
     }
 
     private void UpdateTimer()
@@ -217,7 +229,7 @@ public class GameManager : MonoBehaviour
             los.finalScreen.SetActive(true);
         }
         var time = TimeSpan.FromSeconds(_levelTimer);
-        los.endTimer.text = "You finished in: " + time.ToString(@"mm\:ss\:fff");
+        los.endTimer.text = "You finished in: \n" + time.ToString(@"mm\:ss\:fff");
         levelCompleted = true;
         _timerStarted = false;
         if (GetCurrentLevelIndex() != levels.Count-1)

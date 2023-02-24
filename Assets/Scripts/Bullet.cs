@@ -62,7 +62,6 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-        //Debug.Log("Player has been hit!");
         Player.Instance.TakeDamage(damage);
         _hasDealtDamage = true;
         if (destroyOnHit)

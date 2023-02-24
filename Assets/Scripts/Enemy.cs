@@ -6,8 +6,10 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private float shotCooldown = 1f;
     [SerializeField] private string bulletType;
+    [SerializeField] private float maxAttackRange = 1f;
     private bool _isOnCooldown;
     private BulletPooler _pooler;
+    private float _distanceToPlayer;
 
     // Vars for wandering
 
@@ -24,7 +26,10 @@ public class Enemy : MonoBehaviour
         if (GameManager.Instance.playerDied) return;
         if (!GameManager.Instance.levelCompleted && Player.Instance.hasLeftSpawn)
         {
-            SimpleShootAtPlayer();
+            if (ShouldAttack())
+            {
+                SimpleShootAtPlayer();
+            }
         }
     }
 
@@ -49,6 +54,13 @@ public class Enemy : MonoBehaviour
         _pooler.SpawnFromPool(bulletType, gameObject.transform.position, rotation, direction);
         
         StartCoroutine(Cooldown());
+    }
+
+    private bool ShouldAttack()
+    {
+        if (Vector2.Distance(gameObject.transform.position, Player.Instance.gameObject.transform.position)
+            > maxAttackRange) return false;
+        return true;
     }
 
     // Add wandering

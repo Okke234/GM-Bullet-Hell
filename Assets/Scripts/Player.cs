@@ -55,13 +55,14 @@ public class Player : MonoBehaviour
     {
         StartLine.OnTrigger += HandleLevelStart;
         FinishLine.OnTrigger += HandleLevelEnd;
-        Initialize();
+        GameManager.OnLevelLoaded += HandleLevelLoad;
     }
 
     private void OnDestroy()
     {
         StartLine.OnTrigger -= HandleLevelStart;
         FinishLine.OnTrigger -= HandleLevelEnd;
+        GameManager.OnLevelLoaded -= HandleLevelLoad;
     }
 
     private void Start()
@@ -87,18 +88,19 @@ public class Player : MonoBehaviour
             cam.transform.parent = null;
             gameObject.SetActive(false);
         }
+        Debug.Log(health);
+    }
+    
+    private void HandleLevelLoad()
+    {
+        Initialize();
     }
     
     private void HandleLevelStart()
     {
         hasLeftSpawn = true;
     }
-
-    public void HandleRestart() //Turn this into an event later
-    {
-        //Health = StartingHealth;
-        hasLeftSpawn = false;
-    }
+    
     private void HandleLevelEnd()
     {
         StartCoroutine(LevelEndMovement());
